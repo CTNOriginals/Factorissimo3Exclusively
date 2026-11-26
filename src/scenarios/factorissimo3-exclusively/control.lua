@@ -4,3 +4,4 @@ local handler = require("event_handler")
 require("__base__/script/freeplay/control.lua")
 
 handler.add_lib(require("runtime.freeplay"))
+handler.add_lib(require("runtime.spawn"))
