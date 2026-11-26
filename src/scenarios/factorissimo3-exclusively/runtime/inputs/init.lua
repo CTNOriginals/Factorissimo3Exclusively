@@ -10,6 +10,7 @@
 local const = require("shared.constants")
 local config = require("shared.config")
 local combinator = require("runtime.inputs.combinator")
+local setup = require("runtime.inputs.setup")
 
 ---@class (exact) ActiveInput
 ---@field combinator LuaEntity
@@ -196,6 +197,30 @@ retryWaitingInputs = function()
 
 	updateTickHandlers()
 end
+
+-- Commands
+
+---Places input combinators behind every wall gap of the factory the player is in.
+---Only works in the map editor, as it is meant for building the scenario.
+---@param command CustomCommandData
+local function onSetupInputsCommand(command)
+	local player = game.get_player(command.player_index)
+	if not player then
+		return
+	end
+
+	if player.controller_type ~= defines.controllers.editor then
+		player.print({ "message.setup-inputs-editor-only" })
+		return
+	end
+
+	local placed = setup.placeCombinators(player.surface, player.force --[[@as LuaForce]], player.position)
+	scanAll()
+
+	player.print({ "message.setup-inputs-placed", placed, player.surface.name })
+end
+
+commands.add_command(const.commands.setupInputs, { "command-help.setup-inputs" }, onSetupInputsCommand)
 
 -- Events
 

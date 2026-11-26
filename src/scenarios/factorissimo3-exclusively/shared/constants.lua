@@ -32,4 +32,9 @@ M.directionOffsets = {
 	[defines.direction.west] = { x = -1, y = 0 },
 }
 
+-- Commands
+
+M.commands = {}
+M.commands.setupInputs = "setup-inputs"
+
 return M
