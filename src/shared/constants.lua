@@ -32,6 +32,14 @@ M.directionOffsets = {
 	[defines.direction.west] = { x = -1, y = 0 },
 }
 
+-- Surfaces
+
+---Factorissimo names its factory floor surfaces "<planet>-factory-floor"
+M.factoryFloorSuffix = "-factory-floor"
+
+---The default map width and height, which is no limit in practice
+M.unlimitedMapSize = 2000000
+
 -- Commands
 
 M.commands = {}
