@@ -1,0 +1,9 @@
+{
+	"name": "factorissimo3-exclusively",
+	"version": "$(VERSION)",
+	"title": "Factorissimo 3 Exclusively",
+	"author": "CTNOriginals",
+	"description": "A scenario where the whole game is played inside a single Factorissimo factory building.",
+	"factorio_version": "2.1",
+	"dependencies": ["base >= 2.1", "factorissimo-2-notnotmelon >= 3.12"]
+}
