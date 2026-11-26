@@ -5,6 +5,7 @@ SCENARIO_NAME?=$(PROJECT_NAME)
 
 FACTORIO_ARGS:=--load-scenario $(PROJECT_NAME)/$(SCENARIO_NAME)
 PROJECT_DEST:=$(FACTORIO_MOD_DIR)/$(PROJECT_NAME)
+FACTORIO_LOG?=$(FACTORIO_DIR)/factorio-current.log
 
 DEPLOY_FILES:=src/** LICENSE.md README.md
 
@@ -22,4 +23,8 @@ run: ##@run Run factorio and start a new game from the deployed scenario
 deploy: ##@run Deploy the src files to the factorio mods folder
 	@echo Deploying $(PROJECT_NAME) \($(VERSION)\) to $(PROJECT_DEST)
 	$(call copy-mod,$(PROJECT_DEST))
+
+log: ##@run Follow the factorio log and print only the lines logged by this mod
+	@tail -n +1 -F "$(FACTORIO_LOG)" 2>/dev/null | \
+		awk -v info="$(PROJECT_DEST)/info.json" -f scripts/mod-log.awk
 
