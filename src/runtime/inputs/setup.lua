@@ -1,8 +1,9 @@
 -- Places an input combinator behind every gap in the factory walls.
 --
 -- A gap is a single tile in the outer wall line: a tile with void behind it,
--- whose two neighbours along the wall are a different tile (the wall).
--- Wall tiles and the wider entrance are skipped, since they have a neighbour of the same tile along the wall.
+-- whose two neighbours along the wall are a different tile (the wall) and not void.
+-- Skipped are wall tiles and the wider entrance, since they have a neighbour of the same tile along the wall,
+-- and the end of the wall pillars beside the entrance, since they have void along one side.
 
 local const = require("shared.constants")
 local config = require("shared.config")
@@ -30,15 +31,16 @@ local function getTileName(surface, position)
 	return surface.get_tile(position.x, position.y).name
 end
 
----True if both tiles along the wall differ from the gap tile, so the gap is one tile wide
+---True if both tiles along the wall are a different tile that is not void, so the gap is one tile wide
 ---@param surface LuaSurface
 ---@param position MapPosition
 ---@param tileName string
 ---@param side WallSide
 ---@return boolean
-local function isSingleGap(surface, position, tileName, side)
+local function isWallGap(surface, position, tileName, side)
 	for _, offset in ipairs(side.along) do
-		if getTileName(surface, utils.OffsetPosition(position, offset)) == tileName then
+		local neighbour = getTileName(surface, utils.OffsetPosition(position, offset))
+		if neighbour == tileName or neighbour == const.voidTile then
 			return false
 		end
 	end
@@ -94,7 +96,7 @@ M.placeCombinators = function(surface, force, center)
 			local behind = utils.OffsetPosition(position, side.out)
 
 			if getTileName(surface, behind) == const.voidTile
-				and isSingleGap(surface, position, tile.name, side)
+				and isWallGap(surface, position, tile.name, side)
 				and tryPlace(surface, force, behind, side.facing)
 			then
 				placed = placed + 1
