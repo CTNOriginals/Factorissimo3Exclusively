@@ -2,6 +2,7 @@
 include ./.make/main.mk
 
 SCENARIO_NAME?=$(PROJECT_NAME)
+SCENARIO_SRC:=src/scenarios/$(SCENARIO_NAME)
 
 FACTORIO_ARGS:=--load-scenario $(PROJECT_NAME)/$(SCENARIO_NAME)
 PROJECT_DEST:=$(FACTORIO_MOD_DIR)/$(PROJECT_NAME)
@@ -27,4 +28,20 @@ deploy: ##@run Deploy the src files to the factorio mods folder
 log: ##@run Follow the factorio log and print only the lines logged by this mod
 	@tail -n +1 -F "$(FACTORIO_LOG)" 2>/dev/null | \
 		awk -v info="$(PROJECT_DEST)/info.json" -f scripts/mod-log.awk
+
+# The map editor only opens scenarios from the user scenarios folder and saves
+# its loaded copy of every file back there, so the map is edited in that copy
+# and only the map files are pulled back into src.
+SCENARIO_EDIT_DIR:=$(FACTORIO_DIR)/scenarios/$(SCENARIO_NAME)
+MAP_FILES:=blueprint.zip script.dat
+
+edit: ##@map Copy the scenario to the user scenarios folder to open it in the map editor
+	@echo Copying $(SCENARIO_NAME) to $(SCENARIO_EDIT_DIR)
+	rm -rf "$(SCENARIO_EDIT_DIR)"
+	mkdir -p "$(SCENARIO_EDIT_DIR)"
+	cp -r $(SCENARIO_SRC)/. "$(SCENARIO_EDIT_DIR)"
+
+pull: ##@map Copy the map saved by the map editor back into src, leaving the scripts alone
+	@echo Pulling the map from $(SCENARIO_EDIT_DIR)
+	$(foreach file,$(MAP_FILES),cp "$(SCENARIO_EDIT_DIR)/$(file)" "$(SCENARIO_SRC)/$(file)";)
 
