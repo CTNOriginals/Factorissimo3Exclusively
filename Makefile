@@ -45,3 +45,12 @@ pull: ##@map Copy the map saved by the map editor back into src, leaving the scr
 	@echo Pulling the map from $(SCENARIO_EDIT_DIR)
 	$(foreach file,$(MAP_FILES),cp "$(SCENARIO_EDIT_DIR)/$(file)" "$(SCENARIO_SRC)/$(file)";)
 
+PACKAGE_DIR:=build
+PACKAGE_NAME:=$(PROJECT_NAME)_$(VERSION)
+
+package: ##@release Build the mod zip for the mod portal into build/
+	@echo Packaging $(PACKAGE_NAME)
+	$(call copy-mod,$(PACKAGE_DIR)/$(PACKAGE_NAME))
+	rm -f "$(PACKAGE_DIR)/$(PACKAGE_NAME).zip"
+	cd "$(PACKAGE_DIR)" && zip -qr "$(PACKAGE_NAME).zip" "$(PACKAGE_NAME)"
+	rm -rf "$(PACKAGE_DIR)/$(PACKAGE_NAME)"
