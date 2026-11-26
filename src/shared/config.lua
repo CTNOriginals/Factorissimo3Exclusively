@@ -43,10 +43,4 @@ M.spawn = {
 ---A character found on one of these surfaces is moved back to the spawn
 M.outsideSurfaces = { "nauvis" }
 
--- Surfaces
-
----Surfaces that keep the map size of the scenario map.
----Every other surface, except the factory floors, generates without a size limit.
-M.limitedSurfaces = { "nauvis" }
-
 return M

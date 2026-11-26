@@ -1,11 +1,8 @@
 -- The scenario map is limited to the factory building, and new surfaces inherit that map size.
--- This lifts the limit from every other surface (planets, sandboxes of other mods), so they generate like normal.
+-- This lifts the limit from surfaces that are not part of the challenge (like the sandboxes of other mods),
+-- so they generate like normal. Planets, space platforms and factory floors are left alone.
 
-local config = require("shared.config")
 local const = require("shared.constants")
-local utils = require("shared.utils")
-
-local limitedSurfaces = utils.ToSet(config.limitedSurfaces)
 
 ---@param name string
 ---@return boolean
@@ -14,9 +11,15 @@ local function isFactoryFloor(name)
 	return name:sub(-#suffix) == suffix
 end
 
+---@param surface LuaSurface
+---@return boolean
+local function isPartOfGame(surface)
+	return surface.planet ~= nil or surface.platform ~= nil or isFactoryFloor(surface.name)
+end
+
 ---@param surface LuaSurface?
 local function unlimitSize(surface)
-	if not surface or limitedSurfaces[surface.name] or isFactoryFloor(surface.name) then
+	if not surface or isPartOfGame(surface) then
 		return
 	end
 
