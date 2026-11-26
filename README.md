@@ -23,7 +23,7 @@ Switch the combinator off or clear the slot to stop the input.
 ## Configuration
 
 The allowed resources, feed rates and spawn point are in
-[`shared/config.lua`](src/scenarios/factorissimo3-exclusively/shared/config.lua).
+[`shared/config.lua`](src/shared/config.lua).
 A game keeps the scripts it was started with, so changes only apply to new games.
 
 ## Development

@@ -2,7 +2,7 @@
 include ./.make/main.mk
 
 SCENARIO_NAME?=$(PROJECT_NAME)
-SCENARIO_SRC:=src/scenarios/$(SCENARIO_NAME)
+SCENARIO_SRC:=src
 
 FACTORIO_ARGS:=--load-scenario $(PROJECT_NAME)/$(SCENARIO_NAME)
 PROJECT_DEST:=$(FACTORIO_MOD_DIR)/$(PROJECT_NAME)
@@ -15,7 +15,8 @@ define copy-mod
 	rm -rf "$(1)"
 	mkdir -p "$(1)"
 	cp -r $(MOD_FILES) "$(1)"
-	cp -r src/scenarios "$(1)"
+	mkdir -p "$(1)/scenarios/$(SCENARIO_NAME)"
+	cp -r $(SCENARIO_SRC)/. "$(1)/scenarios/$(SCENARIO_NAME)"
 	sed -i 's/\$$(VERSION)/$(VERSION)/' "$(1)/info.json"
 endef
 
