@@ -8,20 +8,21 @@ FACTORIO_ARGS:=--load-scenario $(PROJECT_NAME)/$(SCENARIO_NAME)
 PROJECT_DEST:=$(FACTORIO_MOD_DIR)/$(PROJECT_NAME)
 FACTORIO_LOG?=$(FACTORIO_DIR)/factorio-current.log
 
-DEPLOY_FILES:=src/** LICENSE.md README.md
+MOD_FILES:=mod/** LICENSE.md README.md
 
-# Copies the deploy files into $(1) and fills in the version
+# Copies the mod files and the scenario into $(1) and fills in the version
 define copy-mod
 	rm -rf "$(1)"
 	mkdir -p "$(1)"
-	cp -r $(DEPLOY_FILES) "$(1)"
+	cp -r $(MOD_FILES) "$(1)"
+	cp -r src/scenarios "$(1)"
 	sed -i 's/\$$(VERSION)/$(VERSION)/' "$(1)/info.json"
 endef
 
 run: ##@run Run factorio and start a new game from the deployed scenario
 	$(FACTORIO_EXE) $(FACTORIO_ARGS)
 
-deploy: ##@run Deploy the src files to the factorio mods folder
+deploy: ##@run Deploy the mod to the factorio mods folder
 	@echo Deploying $(PROJECT_NAME) \($(VERSION)\) to $(PROJECT_DEST)
 	$(call copy-mod,$(PROJECT_DEST))
 
