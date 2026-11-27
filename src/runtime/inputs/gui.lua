@@ -250,7 +250,10 @@ M.onInteraction = function(event)
 
 	if action == "clear" then
 		setSignal(gui.combinator, nil, nil)
-	elseif action == "toggle" then
+		return M.close(player)
+	end
+
+	if action == "toggle" then
 		getBehavior(gui.combinator).enabled = element.switch_state == "right"
 	end
 
