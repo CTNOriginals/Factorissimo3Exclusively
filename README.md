@@ -80,6 +80,11 @@ what to build and how it should play, and the AI wrote most of the code to those
 reviewed and tested in game by me, and many were sent back with fixes or a different approach. The map itself,
 the balancing and the decisions on what to keep were done by hand.
 
+The AI also did not work from scratch. The project structure, the make tooling (including the log filter) and
+the code style all come from my own [Color Coded Combinators](https://github.com/CTNOriginals/ColorCodedCombinators)
+mod, and the code here was written to follow it. That way this project builds on my own earlier work rather than
+on code taken from others.
+
 ## License
 
 BSD 3-Clause, see [LICENSE.md](LICENSE.md)
