@@ -10,7 +10,8 @@ The factory floor at the start of the scenario:
 
 ## Features
 
-- Start inside the biggest factory building, with nothing else in the world
+- Start on a floor that copies the biggest factory building, with nothing else in the world
+- Factories built on that floor need no recursion research, since it is not a real factory. Deeper nesting follows Factorissimo's rules
 - Resources come in through constant combinators in the void behind the gaps in the factory walls
 - Items are fed onto belts, fluids into pipes
 - A picker that only offers the basic resources, anything else is cleared from the combinators
@@ -62,13 +63,14 @@ The map editor only opens scenarios from the user scenarios folder, and saving w
 2. Open and save it in the map editor
 3. `make pull` copies the saved map back into `src`
 
-Inside the editor, these commands set up the factory you are standing in:
+Inside the editor, these commands set up the map:
 
-- `/setup-inputs` places an input combinator behind every wall gap
-- `/center-power-pole` moves the factory power pole to the middle of the entrance
+- `/setup-floor` builds the main factory floor with its power pole and input combinators, after clearing the area
+- `/setup-inputs` places an input combinator behind every wall gap of the floor or factory you are standing in
 
 ## Known issues
 
+- The main floor imitates a factory but is not one: it has the lights and greenhouse upgrades, but not the construction robots Factorissimo gives its factories. Factories built on it have the greenhouse at a quarter of the planet's solar power instead of half.
 - Not tested with Space Age. It may work, but other planets and space platforms are untested.
 - Not tested in multiplayer.
 - Inputs always feed normal quality resources.
