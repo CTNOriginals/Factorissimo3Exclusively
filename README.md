@@ -74,7 +74,11 @@ Inside the editor, these commands set up the factory you are standing in:
 
 ## AI disclosure
 
-This project was developed with the assistance of AI.
+This project was built together with an AI assistant, as one long, continuous back and forth rather than a
+single generated result. The idea, the design of each feature and the project structure are my own: I decided
+what to build and how it should play, and the AI wrote most of the code to those directions. Every change was
+reviewed and tested in game by me, and many were sent back with fixes or a different approach. The map itself,
+the balancing and the decisions on what to keep were done by hand.
 
 ## License
 
