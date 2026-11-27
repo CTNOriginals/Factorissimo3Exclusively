@@ -48,6 +48,12 @@ M.gui.inputFrame = M.gui.prefix .. "input"
 ---Tag key that holds the action of an element, prefixed so elements of other mods are never mistaken for ours
 M.gui.actionTag = M.gui.prefix .. "action"
 
+---Custom inputs that close the gui, defined in mod/data.lua
+M.gui.closeInputs = {
+	M.name .. "-clear-cursor",
+	M.name .. "-pipette",
+}
+
 -- Commands
 
 M.commands = {}

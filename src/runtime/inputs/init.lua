@@ -256,23 +256,39 @@ local function onGuiInteraction(event)
 	updateInput(gui.onInteraction(event))
 end
 
+---Closes the gui on Q, like the vanilla guis
+---@param event EventData.CustomInputEvent
+local function onCloseInput(event)
+	local player = game.get_player(event.player_index)
+	if player then
+		updateInput(gui.close(player))
+	end
+end
+
 ---@param event EventData.on_entity_settings_pasted
 local function onSettingsPasted(event)
 	updateInput(event.destination)
+end
+
+---@type {[defines.events | string]: fun(event: EventData)}
+local events = {
+	[defines.events.on_gui_opened] = onGuiOpened,
+	[defines.events.on_gui_closed] = onGuiClosed,
+	[defines.events.on_gui_click] = onGuiInteraction,
+	[defines.events.on_gui_switch_state_changed] = onGuiInteraction,
+	[defines.events.on_entity_settings_pasted] = onSettingsPasted,
+	-- An undo/redo can give a combinator a signal without any other event
+	[defines.events.on_undo_applied] = scanAll,
+	[defines.events.on_redo_applied] = scanAll,
+}
+
+for _, name in ipairs(const.gui.closeInputs) do
+	events[name] = onCloseInput
 end
 
 return {
 	on_init = scanAll,
 	on_load = updateTickHandlers,
 	on_configuration_changed = scanAll,
-	events = {
-		[defines.events.on_gui_opened] = onGuiOpened,
-		[defines.events.on_gui_closed] = onGuiClosed,
-		[defines.events.on_gui_click] = onGuiInteraction,
-		[defines.events.on_gui_switch_state_changed] = onGuiInteraction,
-		[defines.events.on_entity_settings_pasted] = onSettingsPasted,
-		-- An undo/redo can give a combinator a signal without any other event
-		[defines.events.on_undo_applied] = scanAll,
-		[defines.events.on_redo_applied] = scanAll,
-	},
+	events = events,
 }
