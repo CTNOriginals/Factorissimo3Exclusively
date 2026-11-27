@@ -52,7 +52,7 @@ git clone --recursive https://github.com/CTNOriginals/Factorissimo3Exclusively.g
 - Copy `.env.example` to `.env` and fill in the paths
 - Run `make help` to see the available commands
 
-Requires `make`, `git`, `awk`, and `zip` for `make package`.
+Requires `make`, `git` and `awk`. `make package` uses `zip`, or the `tar.exe` that comes with Windows when `zip` is missing.
 
 ### Editing the map
 

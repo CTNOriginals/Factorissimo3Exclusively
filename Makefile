@@ -75,9 +75,17 @@ pull: ##@map Copy the map saved by the map editor back into src, leaving the scr
 PACKAGE_DIR:=build
 PACKAGE_NAME:=$(PROJECT_NAME)_$(VERSION)
 
+# zip is not part of Git for Windows, so the tar.exe that ships with Windows is used when zip is missing.
+# It writes a zip from the .zip extension, with the forward slashes in paths that factorio needs.
+WINDOWS_TAR?=/c/Windows/System32/tar.exe
+
 package: ##@release Build the mod zip for the mod portal into build/
 	@echo Packaging $(PACKAGE_NAME)
 	$(call copy-mod,$(PACKAGE_DIR)/$(PACKAGE_NAME))
 	rm -f "$(PACKAGE_DIR)/$(PACKAGE_NAME).zip"
-	cd "$(PACKAGE_DIR)" && zip -qr "$(PACKAGE_NAME).zip" "$(PACKAGE_NAME)"
+	cd "$(PACKAGE_DIR)" && if command -v zip >/dev/null; then \
+		zip -qr "$(PACKAGE_NAME).zip" "$(PACKAGE_NAME)"; \
+	else \
+		"$(WINDOWS_TAR)" -a -cf "$(PACKAGE_NAME).zip" "$(PACKAGE_NAME)"; \
+	fi
 	rm -rf "$(PACKAGE_DIR)/$(PACKAGE_NAME)"
