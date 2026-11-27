@@ -99,13 +99,23 @@ M.build = function(surface, force)
 	-- The number pattern on the floor is left out.
 	---@type FloorRect?
 	local entrance
+	---@type FloorRect?
+	local platform
 	for _, rect in ipairs(layout.rectangles) do
 		local isFloor = rect.tile == layout.connection_tile and isInside(rect, outer)
 		addRect(tiles, isFloor and config.floor.floorTile or wallTile, rect)
 
 		if not isInside(rect, outer) then
 			entrance = rect
+			platform = platform or rect
 		end
+	end
+
+	-- Cuts the outer corners off the platform, so its sides slant in towards the pole
+	if platform then
+		local lastRow = platform.y2 - 1
+		table.insert(tiles, { name = const.voidTile, position = { platform.x1, lastRow } })
+		table.insert(tiles, { name = const.voidTile, position = { platform.x2 - 1, lastRow } })
 	end
 	for _, connection in pairs(layout.connections) do
 		table.insert(tiles, { name = config.floor.floorTile, position = { connection.inside_x, connection.inside_y } })
