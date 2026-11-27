@@ -67,6 +67,15 @@ Inside the editor, these commands set up the factory you are standing in:
 - `/setup-inputs` places an input combinator behind every wall gap
 - `/center-power-pole` moves the factory power pole to the middle of the entrance
 
+## Known issues
+
+- Not tested with Space Age. It may work, but other planets and space platforms are untested.
+- Not tested in multiplayer.
+- Inputs always feed normal quality resources.
+- Splitters on a wall gap are not fed, use a belt, underground belt or loader instead.
+- Two uranium inputs only a few tiles apart can end up sharing their sulfuric acid, since the pipes behind them connect.
+- A combinator without a resource is only picked up again when its window is closed, so a resource set on it some other way (by a script or a logistic group edit) is not fed until then.
+
 ## AI disclosure
 
 This project was built together with an AI assistant, as one long, continuous back and forth rather than a single generated result. The idea, the design of each feature and the project structure are my own: I decided what to build and how it should play, and the AI wrote most of the code to those directions. Every change was reviewed and tested in game by me, and many were sent back with fixes or a different approach. The map itself, the balancing and the decisions on what to keep were done by hand.
