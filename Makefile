@@ -8,8 +8,7 @@ SCENARIO_SRC:=src
 # This is evaluated before the defaults below are filled in.
 FACTORIO_ARGS:=$(strip \
 	$(if $(FACTORIO_CONFIG),--config "$(FACTORIO_CONFIG)") \
-	$(if $(FACTORIO_MOD_DIR),--mod-directory "$(FACTORIO_MOD_DIR)") \
-	--load-scenario "$(PROJECT_NAME)/$(SCENARIO_NAME)")
+	$(if $(FACTORIO_MOD_DIR),--mod-directory "$(FACTORIO_MOD_DIR)"))
 
 # Paths that are not set in .env resolve from FACTORIO_DIR, like a standalone factorio install
 FACTORIO_EXE?=$(FACTORIO_DIR)/bin/x64/factorio.exe
@@ -23,7 +22,7 @@ PROJECT_DEST:=$(FACTORIO_MOD_DIR)/$(PROJECT_NAME)
 require-factorio-dir:
 	@test -n "$(FACTORIO_DIR)" || { echo "FACTORIO_DIR is not set, copy .env.example to .env and fill it in"; exit 1; }
 
-run deploy log edit pull: require-factorio-dir
+run play deploy log edit pull: require-factorio-dir
 
 MOD_FILES:=mod/** LICENSE.md README.md
 
@@ -37,8 +36,17 @@ define copy-mod
 	sed -i 's/\$$(VERSION)/$(VERSION)/' "$(1)/info.json"
 endef
 
-run: ##@run Run factorio and start a new game from the deployed scenario
-	"$(FACTORIO_EXE)" $(FACTORIO_ARGS)
+# Runs factorio with the arguments in $(1), followed by FACTORIO_RUN_ARGS for anything extra,
+# e.g. make run FACTORIO_RUN_ARGS="--load-game path/to/save.zip"
+define run-factorio
+	"$(FACTORIO_EXE)" $(strip $(FACTORIO_ARGS) $(1) $(FACTORIO_RUN_ARGS))
+endef
+
+run: ##@run Run factorio
+	$(call run-factorio)
+
+play: deploy ##@run Deploy the mod and start a new game from its scenario
+	$(call run-factorio,--load-scenario "$(PROJECT_NAME)/$(SCENARIO_NAME)")
 
 deploy: ##@run Deploy the mod to the factorio mods folder
 	@echo Deploying $(PROJECT_NAME) \($(VERSION)\) to $(PROJECT_DEST)
