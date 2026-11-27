@@ -12,7 +12,7 @@ The factory floor at the start of the scenario:
 
 - Start on a floor that copies the biggest factory building, with nothing else in the world
 - Factories built on that floor need no recursion research, since it is not a real factory. Deeper nesting follows Factorissimo's rules
-- Resources come in through constant combinators in the void behind the gaps in the factory walls
+- Resources come in through the gaps in the walls, chosen with the combinator just outside each gap
 - Items are fed onto belts, fluids into pipes
 - A picker that only offers the basic resources, anything else is cleared from the combinators
 - Uranium ore needs sulfuric acid, like mining it does: picking it builds pipes around the combinator to deliver it to
@@ -23,7 +23,7 @@ The factory floor at the start of the scenario:
 
 1. Start a new game from the **Factorissimo 3 Exclusively** scenario
 2. Place a belt or pipe on a gap in the factory wall
-3. Open the combinator in the void behind it and pick an ore or fluid
+3. Open the combinator just outside that gap and pick an ore or fluid
 
 Switch the combinator off or clear it to stop the input.
 
