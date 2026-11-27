@@ -42,10 +42,11 @@ M.setupRadius = 64
 -- Research
 
 ---Technologies that are researched by mining a resource, which is impossible here, get one of these goals instead.
----A goal is reached when the force has the amount stored: fluids in storage tanks.
+---A goal is reached when the force has the amount stored: fluids in storage tanks, items in chests.
 ---@type ResearchGoal[]
 M.researchGoals = {
 	{ technology = "oil-processing", kind = "fluid", name = "crude-oil", amount = 50000 },
+	{ technology = "uranium-processing", kind = "item", name = "uranium-ore", amount = 500 },
 }
 
 ---Ticks between checks of the research goals.

@@ -6,7 +6,7 @@
 
 local config = require("shared.config")
 
----@alias ResearchGoal.Kind "fluid"
+---@alias ResearchGoal.Kind "fluid" | "item"
 
 ---@class (exact) ResearchGoal
 ---@field technology string Technology the goal researches
@@ -36,6 +36,21 @@ local counters = {
 		for _, surface in pairs(game.surfaces) do
 			for _, tank in pairs(surface.find_entities_filtered({ type = "storage-tank", force = force })) do
 				total = total + tank.get_fluid_count(name)
+			end
+		end
+
+		return total
+	end,
+
+	item = function(force, name)
+		local total = 0
+
+		for _, surface in pairs(game.surfaces) do
+			for _, chest in pairs(surface.find_entities_filtered({ type = { "container", "logistic-container" }, force = force })) do
+				local inventory = chest.get_inventory(defines.inventory.chest)
+				if inventory then
+					total = total + inventory.get_item_count(name)
+				end
 			end
 		end
 
