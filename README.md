@@ -10,15 +10,15 @@ A scenario where the whole game is played inside a single
 - Start inside the biggest factory building, with nothing else in the world
 - Resources come in through constant combinators in the void behind the gaps in the factory walls
 - Items are fed onto belts, fluids into pipes
-- Only basic resources are allowed, anything else is cleared from the combinators
+- A picker that only offers the basic resources, anything else is cleared from the combinators
 
 ## Usage
 
 1. Start a new game from the **Factorissimo 3 Exclusively** scenario
 2. Place a belt or pipe on a gap in the factory wall
-3. Open the combinator in the void behind it and set an ore or fluid in the first slot
+3. Open the combinator in the void behind it and pick an ore or fluid
 
-Switch the combinator off or clear the slot to stop the input.
+Switch the combinator off or clear it to stop the input.
 
 ## Configuration
 
