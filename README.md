@@ -70,7 +70,8 @@ Inside the editor, these commands set up the map:
 
 ## Known issues
 
-- The main floor imitates a factory but is not one: it has the lights and greenhouse upgrades, but not the construction robots Factorissimo gives its factories. Factories built on it have the greenhouse at a quarter of the planet's solar power instead of half.
+- The main floor imitates a factory but is not one: it follows the lights and greenhouse upgrades, but does not get the construction robots Factorissimo gives its factories.
+- Solar panels only work after the greenhouse upgrade, which only exists with Space Age, like inside Factorissimo's factories. Factories built on the floor then get a quarter of the planet's solar power instead of half.
 - Not tested with Space Age. It may work, but other planets and space platforms are untested.
 - Not tested in multiplayer.
 - Inputs always feed normal quality resources.
