@@ -111,11 +111,16 @@ M.build = function(surface, force)
 		end
 	end
 
-	-- Cuts the outer corners off the platform, so its sides slant in towards the pole
+	-- Cuts the sides of the platform below the wall back by one more tile every row,
+	-- so they slant in towards the pole
 	if platform then
-		local lastRow = platform.y2 - 1
-		table.insert(tiles, { name = const.voidTile, position = { platform.x1, lastRow } })
-		table.insert(tiles, { name = const.voidTile, position = { platform.x2 - 1, lastRow } })
+		for y = outer.y2, platform.y2 - 1 do
+			local cut = y - outer.y2 + 1
+			for i = 0, cut - 1 do
+				table.insert(tiles, { name = const.voidTile, position = { platform.x1 + i, y } })
+				table.insert(tiles, { name = const.voidTile, position = { platform.x2 - 1 - i, y } })
+			end
+		end
 	end
 	for _, connection in pairs(layout.connections) do
 		table.insert(tiles, { name = config.floor.floorTile, position = { connection.inside_x, connection.inside_y } })
