@@ -38,7 +38,7 @@ M.setupRadius = 64
 ---A goal is reached when the force has the amount stored: fluids in storage tanks.
 ---@type ResearchGoal[]
 M.researchGoals = {
-	{ technology = "oil-processing", kind = "fluid", name = "crude-oil", amount = 25000 },
+	{ technology = "oil-processing", kind = "fluid", name = "crude-oil", amount = 50000 },
 }
 
 ---Ticks between checks of the research goals.
