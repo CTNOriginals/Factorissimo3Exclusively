@@ -2,7 +2,8 @@
 -- That way, factories built on it count as built in the open world and need no recursion research,
 -- while the factories inside those follow Factorissimo's rules as usual.
 --
--- It copies the layout of a Factorissimo factory, and imitates what Factorissimo does inside its factories:
+-- It copies the shape of a Factorissimo factory in its own colours: the walls and their gaps, and the entrance
+-- as a wall platform that holds the power pole. It imitates what Factorissimo does inside its factories:
 -- one power pole that powers the whole floor, darkness until the lights upgrade
 -- and no solar power until the greenhouse upgrade.
 
@@ -34,19 +35,6 @@ local function addRect(tiles, name, rect)
 	end
 end
 
----Adds a tile for every "+" in the pattern, the way Factorissimo draws the number on its floors
----@param tiles Tile[]
----@param mosaic {tile: string, x1: integer, y1: integer, pattern: string[]}
-local function addMosaic(tiles, mosaic)
-	for y, row in ipairs(mosaic.pattern) do
-		for x = 1, #row do
-			if row:sub(x, x) == "+" then
-				table.insert(tiles, { name = mosaic.tile, position = { mosaic.x1 + x - 1, mosaic.y1 + y - 1 } })
-			end
-		end
-	end
-end
-
 ---@param rect FloorRect
 ---@param bounds FloorRect
 ---@return boolean
@@ -54,8 +42,19 @@ local function isInside(rect, bounds)
 	return rect.x1 >= bounds.x1 and rect.y1 >= bounds.y1 and rect.x2 <= bounds.x2 and rect.y2 <= bounds.y2
 end
 
----Builds the floor around 0, 0 from the Factorissimo layout, with its power pole and input combinators.
----Everything in the area is removed first. The entrance is left out, since there is no outside to go to.
+---Returns the wall tile, or the fallback when the configured one does not exist
+---@return string
+local function getWallTile()
+	if prototypes.tile[config.floor.wallTile] then
+		return config.floor.wallTile
+	end
+
+	return config.floor.fallbackWallTile
+end
+
+---Builds the floor around 0, 0 in the shape of the Factorissimo layout, with its power pole and input combinators.
+---Everything in the area is removed first. The entrance is filled in with wall, since there is no outside to go to,
+---and the pole stands on it.
 ---@param surface LuaSurface
 ---@param force LuaForce
 ---@return integer? placed Input combinators placed, nil if Factorissimo has no such layout
@@ -68,6 +67,7 @@ M.build = function(surface, force)
 	-- The outer wall, which every other part of the floor fits in, except the entrance
 	---@type FloorRect
 	local outer = layout.rectangles[1]
+	local wallTile = getWallTile()
 	local margin = 2
 	local area = {
 		{ outer.x1 - margin, outer.y1 - margin },
@@ -95,23 +95,29 @@ M.build = function(surface, force)
 		y2 = outer.y2 + margin,
 	})
 
+	-- Only the floor itself is floor, everything else (the walls and the entrance) becomes wall.
+	-- The number pattern on the floor is left out.
+	---@type FloorRect?
+	local entrance
 	for _, rect in ipairs(layout.rectangles) do
-		if isInside(rect, outer) then
-			addRect(tiles, rect.tile, rect)
+		local isFloor = rect.tile == layout.connection_tile and isInside(rect, outer)
+		addRect(tiles, isFloor and config.floor.floorTile or wallTile, rect)
+
+		if not isInside(rect, outer) then
+			entrance = rect
 		end
 	end
-	for _, mosaic in pairs(layout.mosaics or {}) do
-		addMosaic(tiles, mosaic)
-	end
 	for _, connection in pairs(layout.connections) do
-		table.insert(tiles, { name = layout.connection_tile, position = { connection.inside_x, connection.inside_y } })
+		table.insert(tiles, { name = config.floor.floorTile, position = { connection.inside_x, connection.inside_y } })
 	end
 
 	surface.set_tiles(tiles)
 
+	-- On the entrance platform, in the row Factorissimo puts its own pole in
+	local poleX = entrance and (entrance.x1 + entrance.x2) / 2 or 0
 	local pole = surface.create_entity({
 		name = const.floorPole,
-		position = config.floor.polePosition,
+		position = { poleX, layout.inside_energy_y },
 		force = force,
 	})
 	if pole then

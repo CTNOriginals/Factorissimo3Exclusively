@@ -69,10 +69,12 @@ M.floor = {
 	surface = "nauvis",
 	---Force whose research decides the lights and greenhouse upgrades of the floor
 	force = "player",
-	---Factorissimo layout the floor copies
+	---Factorissimo layout whose shape the floor copies
 	layout = "factory-3",
-	---Where the pole that powers the whole floor goes, the middle of the bottom wall
-	polePosition = { x = 0, y = 29 },
+	floorTile = "factory-floor",
+	---Only exists with Factorissimo's space architecture startup setting on, otherwise fallbackWallTile is used
+	wallTile = "space-factory-wall-2",
+	fallbackWallTile = "factory-wall-3",
 }
 
 -- Spawn
