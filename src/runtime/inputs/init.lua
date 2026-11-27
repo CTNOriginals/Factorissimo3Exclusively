@@ -2,7 +2,9 @@
 --
 -- The allowed signal in the first slot is fed into the entity the combinator faces:
 -- items onto a belt, fluids into a pipe.
--- A combinator is sorted when its gui is closed, settings are pasted onto it, or an undo/redo is applied:
+-- Opening an input combinator shows a custom gui with only the allowed resources (see gui.lua).
+-- A combinator is sorted when it is changed in that gui, its gui is closed, settings are pasted onto it,
+-- or an undo/redo is applied:
 --   active  - has a signal and a target, fed every config.feedInterval ticks
 --   waiting - has a signal but no target, retried every config.retryInterval ticks, only while any are waiting
 --   neither - empty or disabled
@@ -10,6 +12,7 @@
 local const = require("shared.constants")
 local config = require("shared.config")
 local combinator = require("runtime.inputs.combinator")
+local gui = require("runtime.inputs.gui")
 local setup = require("runtime.inputs.setup")
 
 ---@class (exact) ActiveInput
@@ -224,11 +227,33 @@ commands.add_command(const.commands.setupInputs, { "command-help.setup-inputs" }
 
 -- Events
 
+---@param event EventData.on_gui_opened
+local function onGuiOpened(event)
+	if event.gui_type ~= defines.gui_type.entity or not combinator.isInput(event.entity) then
+		return
+	end
+
+	local player = game.get_player(event.player_index)
+	if player then
+		gui.open(player, event.entity --[[@as LuaEntity]])
+	end
+end
+
 ---@param event EventData.on_gui_closed
 local function onGuiClosed(event)
 	if event.gui_type == defines.gui_type.entity then
 		updateInput(event.entity)
+	elseif gui.isFrame(event.element) then
+		local player = game.get_player(event.player_index)
+		if player then
+			updateInput(gui.close(player))
+		end
 	end
+end
+
+---@param event EventData.on_gui_click | EventData.on_gui_switch_state_changed
+local function onGuiInteraction(event)
+	updateInput(gui.onInteraction(event))
 end
 
 ---@param event EventData.on_entity_settings_pasted
@@ -241,7 +266,10 @@ return {
 	on_load = updateTickHandlers,
 	on_configuration_changed = scanAll,
 	events = {
+		[defines.events.on_gui_opened] = onGuiOpened,
 		[defines.events.on_gui_closed] = onGuiClosed,
+		[defines.events.on_gui_click] = onGuiInteraction,
+		[defines.events.on_gui_switch_state_changed] = onGuiInteraction,
 		[defines.events.on_entity_settings_pasted] = onSettingsPasted,
 		-- An undo/redo can give a combinator a signal without any other event
 		[defines.events.on_undo_applied] = scanAll,

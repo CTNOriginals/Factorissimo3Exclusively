@@ -40,6 +40,14 @@ M.factoryFloorSuffix = "-factory-floor"
 ---The default map width and height, which is no limit in practice
 M.unlimitedMapSize = 2000000
 
+-- GUI
+
+M.gui = {}
+M.gui.prefix = M.name .. "-"
+M.gui.inputFrame = M.gui.prefix .. "input"
+---Tag key that holds the action of an element, prefixed so elements of other mods are never mistaken for ours
+M.gui.actionTag = M.gui.prefix .. "action"
+
 -- Commands
 
 M.commands = {}
