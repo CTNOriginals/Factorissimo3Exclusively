@@ -4,6 +4,8 @@ A scenario where the whole game is played inside a single [Factorissimo 3](https
 
 Inspired by [this video](https://www.youtube.com/watch?v=maxsZF-rsb4).
 
+The factory floor at the start of the scenario:
+
 ![The empty factory floor, surrounded by the input combinators in the void](docs/images/factory-floor.jpg)
 
 ## Features
