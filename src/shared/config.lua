@@ -44,7 +44,7 @@ M.fluidRates = {
 ---Fluid per second for allowed fluids that are missing from fluidRates
 M.defaultFluidRate = 100
 
----Tiles around the player that /setup-inputs searches for wall gaps
+---Tiles around the player that the editor commands search, like /setup-inputs for wall gaps
 M.setupRadius = 64
 
 -- Research

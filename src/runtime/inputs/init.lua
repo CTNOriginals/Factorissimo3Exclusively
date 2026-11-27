@@ -11,6 +11,7 @@
 
 local const = require("shared.constants")
 local config = require("shared.config")
+local utils = require("shared.utils")
 local combinator = require("runtime.inputs.combinator")
 local inputCost = require("runtime.inputs.cost")
 local gui = require("runtime.inputs.gui")
@@ -249,8 +250,7 @@ local function onSetupInputsCommand(command)
 		return
 	end
 
-	if player.controller_type ~= defines.controllers.editor then
-		player.print({ "message.setup-inputs-editor-only" })
+	if not utils.RequireEditor(player, command.name) then
 		return
 	end
 

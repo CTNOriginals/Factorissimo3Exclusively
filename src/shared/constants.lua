@@ -69,5 +69,14 @@ M.gui.closeInputs = {
 
 M.commands = {}
 M.commands.setupInputs = "setup-inputs"
+M.commands.centerPowerPole = "center-power-pole"
+
+-- Factorissimo
+
+---The power pole Factorissimo places inside every factory
+M.factoryPowerPole = "factory-power-pole"
+
+---The floor tile of the factory entrance
+M.entranceTile = "factory-entrance"
 
 return M

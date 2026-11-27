@@ -8,3 +8,6 @@ handler.add_lib(require("runtime.spawn"))
 handler.add_lib(require("runtime.surfaces"))
 handler.add_lib(require("runtime.inputs.init"))
 handler.add_lib(require("runtime.research"))
+
+-- Commands for building the scenario map
+require("runtime.editor")
