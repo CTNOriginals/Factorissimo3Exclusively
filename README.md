@@ -1,6 +1,6 @@
 # Factorissimo 3 Exclusively
 
-A scenario where the whole game is played inside a single [Factorissimo 3](https://mods.factorio.com/mod/factorissimo-2-notnotmelon) factory.
+A scenario that starts you on a [Factorissimo 3](https://mods.factorio.com/mod/factorissimo-2-notnotmelon) factory floor with nothing outside of it.
 
 Inspired by [this video](https://www.youtube.com/watch?v=maxsZF-rsb4).
 
