@@ -46,7 +46,7 @@ The allowed resources, feed rates, fluid costs, research goals and spawn point a
 ## Development
 
 ```bash
-git clone --recursive https://github.com/CTNOriginals/factorissimo3-exclusively.git
+git clone --recursive https://github.com/CTNOriginals/Factorissimo3Exclusively.git
 ```
 
 - Copy `.env.example` to `.env` and fill in the paths
