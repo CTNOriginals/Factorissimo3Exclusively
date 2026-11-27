@@ -4,10 +4,6 @@ A scenario that starts you on a [Factorissimo 3](https://mods.factorio.com/mod/f
 
 Inspired by [this video](https://www.youtube.com/watch?v=maxsZF-rsb4).
 
-The factory floor at the start of the scenario:
-
-![The empty factory floor, surrounded by the input combinators in the void](docs/images/factory-floor.jpg)
-
 ## Features
 
 - Start on a floor that copies the biggest factory building, with nothing else in the world
