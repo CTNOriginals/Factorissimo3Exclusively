@@ -153,6 +153,15 @@ local function hasResearched(force, name)
 	return technology ~= nil and technology.researched
 end
 
+---Solar power of the surface as its planet defines it.
+---Read from the prototype, since the map can be saved with the property already changed by this script.
+---@param surface LuaSurface
+---@return number
+local function getBaseSolarPower(surface)
+	local properties = surface.planet and surface.planet.prototype.surface_properties
+	return properties and properties["solar-power"] or prototypes.surface_property["solar-power"].default_value
+end
+
 ---Applies the lights and greenhouse upgrades to the floor, like Factorissimo does inside its factories
 local function applyUpgrades()
 	local surface = getSurface()
@@ -164,10 +173,8 @@ local function applyUpgrades()
 	surface.daytime = hasResearched(force, const.factorissimo.lightsTechnology) and 1 or 0.5
 	surface.freeze_daytime = true
 
-	-- Stored once, since the property is changed below
-	storage.floorSolarPower = storage.floorSolarPower or surface.get_property("solar-power")
 	local hasGreenhouse = hasResearched(force, const.factorissimo.greenhouseTechnology)
-	surface.set_property("solar-power", hasGreenhouse and storage.floorSolarPower / 2 or 0)
+	surface.set_property("solar-power", hasGreenhouse and getBaseSolarPower(surface) / 2 or 0)
 end
 
 ---@param event EventData.on_research_finished | EventData.on_research_reversed
