@@ -31,3 +31,16 @@ for _, side in ipairs({ "up", "down", "left", "right" }) do
 		},
 	})
 end
+
+-- The main factory floor is not a real factory, so it gets its own copy of the power pole inside factories:
+-- one pole that powers the whole floor. It is not hidden, since Factorissimo only connects the power of
+-- factories built on the floor to poles that are not.
+local factoryPole = data.raw["electric-pole"]["factory-power-pole"]
+if factoryPole then
+	local pole = table.deepcopy(factoryPole)
+	pole.name = "factorissimo3-exclusively-floor-pole"
+	pole.localised_name = { "entity-name.factory-power-pole" }
+	pole.hidden = false
+	pole.hidden_in_factoriopedia = true
+	data:extend({ pole })
+end
