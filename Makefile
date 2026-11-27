@@ -4,8 +4,7 @@ include ./.make/main.mk
 SCENARIO_NAME?=$(PROJECT_NAME)
 SCENARIO_SRC:=src
 
-FACTORIO_CONFIG?=$(FACTORIO_DIR)/config/config.ini
-FACTORIO_ARGS:=--mod-directory "$(FACTORIO_MOD_DIR)" --load-scenario "$(PROJECT_NAME)/$(SCENARIO_NAME)" --config "$(FACTORIO_CONFIG)"
+FACTORIO_ARGS:=--load-scenario "$(PROJECT_NAME)/$(SCENARIO_NAME)"
 PROJECT_DEST:=$(FACTORIO_MOD_DIR)/$(PROJECT_NAME)
 FACTORIO_LOG?=$(FACTORIO_DIR)/factorio-current.log
 
