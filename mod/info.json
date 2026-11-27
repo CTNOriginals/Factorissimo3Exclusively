@@ -4,6 +4,7 @@
 	"title": "Factorissimo 3 Exclusively",
 	"author": "CTNOriginals",
 	"description": "A scenario where the whole game is played inside a single Factorissimo factory building.",
+	"homepage": "https://github.com/CTNOriginals/Factorissimo3Exclusively",
 	"factorio_version": "2.1",
 	"dependencies": ["base >= 2.1", "factorissimo-2-notnotmelon >= 3.12"]
 }
