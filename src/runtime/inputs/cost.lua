@@ -1,13 +1,13 @@
 -- Some resources cost a fluid to bring in, like uranium ore needs sulfuric acid to be mined in vanilla.
 --
--- Picking such a resource builds a pipe from behind the combinator, through the void and under the wall,
--- that comes up in the wall tile beside the gap. The fluid has to be piped in there from inside the factory,
--- and every item fed takes its cost out of that pipe.
+-- Picking such a resource builds pipes around the combinator in the void, with a pipe to ground on each side
+-- that faces the factory. The player connects to either one with a pipe to ground of their own inside the wall,
+-- and every item fed takes its cost out of those pipes.
 --
 -- For an input in the bottom wall, seen from above (# wall, G gap, C combinator, U pipe to ground, = pipe):
---   # U G #
---     U C
---     = =
+--   # # G # #
+--     U C U
+--     = = =
 
 local const = require("shared.constants")
 local config = require("shared.config")
@@ -19,7 +19,7 @@ local utils = require("shared.utils")
 
 ---@class (exact) InputCostPipes
 ---@field entities LuaEntity[]
----@field source LuaEntity The pipe end in the wall, which the fluid is taken from
+---@field source LuaEntity The pipe behind the combinator, which the fluid is taken from
 
 local M = {}
 
@@ -35,26 +35,6 @@ local function getDirection(offset)
 	for direction, directionOffset in pairs(const.directionOffsets) do
 		if directionOffset.x == offset.x and directionOffset.y == offset.y then
 			return direction
-		end
-	end
-
-	return nil
-end
-
----Returns the side of the gap that has a wall tile for the pipe to come up in
----@param surface LuaSurface
----@param gap MapPosition
----@param inward MapPosition
----@return MapPosition?
-local function findWallSide(surface, gap, inward)
-	local gapTile = surface.get_tile(gap.x, gap.y).name
-
-	for _, side in ipairs({ { x = inward.y, y = inward.x }, { x = -inward.y, y = -inward.x } }) do
-		local position = utils.OffsetPosition(gap, side)
-		local tile = surface.get_tile(position.x, position.y).name
-
-		if tile ~= const.voidTile and tile ~= gapTile then
-			return side
 		end
 	end
 
@@ -83,21 +63,20 @@ M.build = function(combinator)
 	end
 
 	local surface = combinator.surface
-	local gap = utils.OffsetPosition(combinator.position, inward)
-	local side = findWallSide(surface, gap, inward)
-	if not side then
-		return nil
-	end
-
 	local outward = negate(inward)
-	local beside = utils.OffsetPosition(combinator.position, side)
+	local behind = utils.OffsetPosition(combinator.position, outward)
 
+	-- The pipe behind the combinator goes first, since it is the source
 	local parts = {
-		{ name = "pipe-to-ground", position = utils.OffsetPosition(gap, side), direction = getDirection(inward) },
-		{ name = "pipe-to-ground", position = beside, direction = getDirection(outward) },
-		{ name = "pipe", position = utils.OffsetPosition(beside, outward) },
-		{ name = "pipe", position = utils.OffsetPosition(combinator.position, outward) },
+		{ name = "pipe", position = behind },
 	}
+
+	for _, side in ipairs({ { x = inward.y, y = inward.x }, { x = -inward.y, y = -inward.x } }) do
+		-- Its underground side faces the factory, to be met by a pipe to ground inside the wall
+		local beside = utils.OffsetPosition(combinator.position, side)
+		table.insert(parts, { name = "pipe-to-ground", position = beside, direction = getDirection(outward) })
+		table.insert(parts, { name = "pipe", position = utils.OffsetPosition(behind, side) })
+	end
 
 	---@type LuaEntity[]
 	local entities = {}

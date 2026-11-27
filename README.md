@@ -11,7 +11,7 @@ A scenario where the whole game is played inside a single
 - Resources come in through constant combinators in the void behind the gaps in the factory walls
 - Items are fed onto belts, fluids into pipes
 - A picker that only offers the basic resources, anything else is cleared from the combinators
-- Uranium ore needs sulfuric acid, like mining it does: picking it builds a pipe through the wall to deliver it
+- Uranium ore needs sulfuric acid, like mining it does: picking it builds pipes around the combinator to deliver it to
 - Oil processing and uranium processing, which normally need the resource mined, are researched by storing it instead
 - Crude oil and uranium ore become available once those technologies can be researched
 
@@ -23,8 +23,8 @@ A scenario where the whole game is played inside a single
 
 Switch the combinator off or clear it to stop the input.
 
-For uranium ore, also pipe sulfuric acid into the pipe that comes up in the wall beside the gap.
-Every ore that comes in uses 1 acid.
+For uranium ore, also deliver sulfuric acid: pipes are built around the combinator, with a pipe to ground on each side
+facing the factory. Connect to either one with a pipe to ground inside the wall. Every ore that comes in uses 1 acid.
 
 ### Research
 
