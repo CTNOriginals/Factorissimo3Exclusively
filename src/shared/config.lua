@@ -21,7 +21,7 @@ M.allowedFluids = {
 }
 
 ---Resources that cost a fluid to bring in, like mining them does in vanilla.
----Picking one builds a pipe through the wall beside the gap, which the fluid has to be delivered to.
+---Picking one builds pipes around its combinator, which the fluid has to be delivered to.
 ---@type {[string]: InputCost}
 M.inputCosts = {
 	["uranium-ore"] = { fluid = "sulfuric-acid", amount = 1 },
