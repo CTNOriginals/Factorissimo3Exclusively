@@ -3,6 +3,7 @@
 local const = require("shared.constants")
 local config = require("shared.config")
 local utils = require("shared.utils")
+local research = require("runtime.research")
 
 local M = {}
 
@@ -19,11 +20,14 @@ local function getSignalType(signal)
 	return signal.type or "item"
 end
 
+---True if the signal is an allowed resource that the force has unlocked
 ---@param signal SignalID
+---@param force LuaForce
 ---@return boolean
-local function isAllowed(signal)
-	local names = allowedSignals[getSignalType(signal)]
-	return names ~= nil and names[signal.name] == true
+local function isAllowed(signal, force)
+	local kind = getSignalType(signal)
+	local names = allowedSignals[kind]
+	return names ~= nil and names[signal.name] == true and research.isUnlocked(force, kind, signal.name)
 end
 
 ---@param section LuaLogisticSection
@@ -68,7 +72,7 @@ M.removeInvalidSignals = function(behavior)
 		if not isGrouped(section) then
 			for index = 1, section.filters_count do
 				local signal = section.get_slot(index).value
-				if signal and signal.name and not isAllowed(signal) then
+				if signal and signal.name and not isAllowed(signal, behavior.entity.force --[[@as LuaForce]]) then
 					section.clear_slot(index)
 				end
 			end
@@ -99,7 +103,7 @@ M.getSelectedSignal = function(behavior)
 	end
 
 	local signal = section.get_slot(1).value
-	if not signal or not signal.name or not isAllowed(signal) then
+	if not signal or not signal.name or not isAllowed(signal, behavior.entity.force --[[@as LuaForce]]) then
 		return nil
 	end
 

@@ -2,6 +2,7 @@
 -- Those get a goal that fits the scenario instead (see config.researchGoals).
 -- The technology gui still shows the vanilla requirement, since that text comes from the prototype,
 -- so the goal is shown in the goal window while the technology is available.
+-- The resource of a goal is locked in the input combinators until its technology is available.
 
 local config = require("shared.config")
 
@@ -16,6 +17,15 @@ local config = require("shared.config")
 ---@class (exact) ResearchGoalState
 ---@field announced {[string]: true} Technologies whose goal has been announced, by name
 ---@field shown boolean True while this script shows a goal in the goal window
+
+local M = {}
+
+---Goals by the resource they are about, as "<kind>/<name>"
+---@type {[string]: ResearchGoal}
+local goalsByResource = {}
+for _, goal in ipairs(config.researchGoals) do
+	goalsByResource[goal.kind .. "/" .. goal.name] = goal
+end
 
 ---Returns how much of the resource the force has stored, per goal kind
 ---@type {[ResearchGoal.Kind]: fun(force: LuaForce, name: string): number}
@@ -62,6 +72,21 @@ local function isAvailable(technology)
 	end
 
 	return true
+end
+
+---True if the force may use the resource: it has no goal, or the technology of its goal is available or researched
+---@param force LuaForce
+---@param kind string
+---@param name string
+---@return boolean
+M.isUnlocked = function(force, kind, name)
+	local goal = goalsByResource[kind .. "/" .. name]
+	if not goal then
+		return true
+	end
+
+	local technology = force.technologies[goal.technology]
+	return technology == nil or technology.researched or isAvailable(technology)
 end
 
 ---@param goal ResearchGoal
@@ -137,8 +162,8 @@ local function checkAllGoals()
 	end
 end
 
-return {
-	on_nth_tick = {
-		[config.researchCheckInterval] = checkAllGoals,
-	},
+M.on_nth_tick = {
+	[config.researchCheckInterval] = checkAllGoals,
 }
+
+return M

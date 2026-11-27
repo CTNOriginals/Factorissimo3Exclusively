@@ -4,6 +4,7 @@
 local const = require("shared.constants")
 local config = require("shared.config")
 local combinator = require("runtime.inputs.combinator")
+local research = require("runtime.research")
 
 local M = {}
 
@@ -73,12 +74,14 @@ local function buildTitlebar(frame)
 	})
 end
 
+---Adds a button for the resource, if it exists and the force has unlocked it
 ---@param parent LuaGuiElement
+---@param force LuaForce
 ---@param kind InputKind
 ---@param name string
-local function addChoice(parent, kind, name)
+local function addChoice(parent, force, kind, name)
 	local prototype = prototypes[kind][name]
-	if not prototype then
+	if not prototype or not research.isUnlocked(force, kind, name) then
 		return
 	end
 
@@ -92,15 +95,16 @@ local function addChoice(parent, kind, name)
 end
 
 ---@param parent LuaGuiElement
+---@param force LuaForce
 ---@return LuaGuiElement
-local function buildChoices(parent)
+local function buildChoices(parent, force)
 	local choices = parent.add({ type = "table", style = "filter_slot_table", column_count = 8 })
 
 	for _, name in ipairs(config.allowedItems) do
-		addChoice(choices, "item", name)
+		addChoice(choices, force, "item", name)
 	end
 	for _, name in ipairs(config.allowedFluids) do
-		addChoice(choices, "fluid", name)
+		addChoice(choices, force, "fluid", name)
 	end
 
 	choices.add({
@@ -200,7 +204,7 @@ M.open = function(player, entity)
 		frame = frame,
 		combinator = entity,
 		switch = switch,
-		choices = buildChoices(content),
+		choices = buildChoices(content, entity.force --[[@as LuaForce]]),
 	}
 	getStorage()[player.index] = gui
 
