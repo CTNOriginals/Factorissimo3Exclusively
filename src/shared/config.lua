@@ -54,7 +54,8 @@ M.researchCheckInterval = 60
 
 -- Spawn
 
----Where players spawn and respawn, inside the factory
+---Where players spawn and respawn, inside the factory.
+---The spawn set on this surface in the map editor is used instead, as long as it is inside a factory.
 M.spawn = {
 	surface = "nauvis-factory-floor",
 	position = { x = 0, y = 0 },
