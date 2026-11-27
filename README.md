@@ -11,6 +11,9 @@ A scenario where the whole game is played inside a single
 - Resources come in through constant combinators in the void behind the gaps in the factory walls
 - Items are fed onto belts, fluids into pipes
 - A picker that only offers the basic resources, anything else is cleared from the combinators
+- Uranium ore needs sulfuric acid, like mining it does: picking it builds a pipe through the wall to deliver it
+- Oil processing and uranium processing, which normally need the resource mined, are researched by storing it instead
+- Crude oil and uranium ore become available once those technologies can be researched
 
 ## Usage
 
@@ -20,9 +23,24 @@ A scenario where the whole game is played inside a single
 
 Switch the combinator off or clear it to stop the input.
 
+For uranium ore, also pipe sulfuric acid into the pipe that comes up in the wall beside the gap.
+Every ore that comes in uses 1 acid.
+
+### Research
+
+Mining crude oil and uranium ore is impossible in here, so the technologies that need it ask for the resource to be
+stored instead. The goal and its progress are shown in the top left while the technology is available:
+
+| Technology         | Goal                                    |
+| ------------------ | --------------------------------------- |
+| Oil processing     | Store 50,000 crude oil in storage tanks |
+| Uranium processing | Store 500 uranium ore in chests         |
+
+The research screen still shows the vanilla requirement, since that text can only be changed for every game.
+
 ## Configuration
 
-The allowed resources, feed rates and spawn point are in
+The allowed resources, feed rates, fluid costs, research goals and spawn point are in
 [`shared/config.lua`](src/shared/config.lua).
 A game keeps the scripts it was started with, so changes only apply to new games.
 
