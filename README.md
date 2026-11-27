@@ -1,6 +1,6 @@
 # Factorissimo 3 Exclusively
 
-A scenario where the whole game is played inside a single [Factorissimo 3](https://mods.factorio.com/mod/factorissimo-2-notnotmelon) factory building.
+A scenario where the whole game is played inside a single [Factorissimo 3](https://mods.factorio.com/mod/factorissimo-2-notnotmelon) factory.
 
 Inspired by [this video](https://www.youtube.com/watch?v=maxsZF-rsb4).
 
