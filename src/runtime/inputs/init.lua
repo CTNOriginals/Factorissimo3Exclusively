@@ -1,7 +1,7 @@
 -- Input combinators: constant combinators in the void that feed resources into the factory.
 --
 -- The allowed signal in the first slot is fed into the entity the combinator faces:
--- items onto a belt, fluids into a pipe.
+-- items onto a belt, fluids into a pipe. Some resources also cost a fluid to bring in (see cost.lua).
 -- Opening an input combinator shows a custom gui with only the allowed resources (see gui.lua).
 -- A combinator is sorted when it is changed in that gui, its gui is closed, settings are pasted onto it,
 -- or an undo/redo is applied:
@@ -12,6 +12,7 @@
 local const = require("shared.constants")
 local config = require("shared.config")
 local combinator = require("runtime.inputs.combinator")
+local inputCost = require("runtime.inputs.cost")
 local gui = require("runtime.inputs.gui")
 local setup = require("runtime.inputs.setup")
 
@@ -20,10 +21,12 @@ local setup = require("runtime.inputs.setup")
 ---@field target LuaEntity
 ---@field kind InputKind
 ---@field name string
+---@field cost InputCost?
 
 ---@class (exact) InputStorage
 ---@field active {[integer]: ActiveInput} Keyed by the combinator unit number
 ---@field waiting {[integer]: LuaEntity} Keyed by the combinator unit number
+---@field costPipes {[integer]: InputCostPipes} Keyed by the combinator unit number
 
 ---@type fun()
 local feedInputs
@@ -32,7 +35,8 @@ local retryWaitingInputs
 
 ---@return InputStorage
 local function getStorage()
-	storage.inputs = storage.inputs or { active = {}, waiting = {} }
+	storage.inputs = storage.inputs or { active = {}, waiting = {}, costPipes = {} }
+	storage.inputs.costPipes = storage.inputs.costPipes or {}
 	return storage.inputs
 end
 
@@ -58,6 +62,24 @@ end
 
 -- Sorting
 
+---Builds the pipe for the fluid cost of the resource, or removes it when the resource has none
+---@param entity LuaEntity
+---@param cost InputCost?
+local function updateCostPipes(entity, cost)
+	local costPipes = getStorage().costPipes
+	local unitNumber = entity.unit_number --[[@as integer]]
+	local pipes = costPipes[unitNumber]
+
+	if cost then
+		if not pipes or not pipes.source.valid then
+			costPipes[unitNumber] = inputCost.build(entity)
+		end
+	elseif pipes then
+		inputCost.remove(pipes)
+		costPipes[unitNumber] = nil
+	end
+end
+
 ---Cleans up the combinator and sorts it into the active list, the waiting list, or neither
 ---@param entity LuaEntity
 local function sortInput(entity)
@@ -72,12 +94,14 @@ local function sortInput(entity)
 	end
 
 	combinator.removeInvalidSignals(behavior)
-	if not combinator.isEnabled(entity, behavior) then
-		return
-	end
 
 	local kind, name = combinator.getSelectedSignal(behavior)
-	if not kind or not name then
+	local cost = kind and name and inputCost.get(kind, name) or nil
+
+	-- Kept while the combinator is switched off, so the fluid in the pipe is not lost
+	updateCostPipes(entity, cost)
+
+	if not kind or not name or not combinator.isEnabled(entity, behavior) then
 		return
 	end
 
@@ -88,6 +112,7 @@ local function sortInput(entity)
 			target = target,
 			kind = kind,
 			name = name,
+			cost = cost,
 		}
 	else
 		inputs.waiting[unitNumber] = entity
@@ -107,7 +132,8 @@ end
 
 ---Sorts every input combinator on every surface
 local function scanAll()
-	storage.inputs = { active = {}, waiting = {} }
+	-- The cost pipes are kept, since they are entities in the world
+	storage.inputs = { active = {}, waiting = {}, costPipes = getStorage().costPipes }
 
 	for _, surface in pairs(game.surfaces) do
 		for _, entity in pairs(surface.find_entities_filtered({ name = const.inputEntity })) do
@@ -122,22 +148,32 @@ end
 
 -- Feeding
 
----@param target LuaEntity
----@param name string
-local function insertOnBothLanes(target, name)
+---True if the input has no cost, or its cost could be paid
+---@param input ActiveInput
+---@return boolean
+local function payCost(input)
+	if not input.cost then
+		return true
+	end
+
+	return inputCost.pay(input.cost, getStorage().costPipes[input.combinator.unit_number])
+end
+
+---@param input ActiveInput
+local function insertOnBothLanes(input)
 	for lane = 1, 2 do
-		local line = target.get_transport_line(lane)
-		if line.can_insert_at_back() then
-			line.insert_at_back({ name = name, count = 1 })
+		local line = input.target.get_transport_line(lane)
+		if line.can_insert_at_back() and payCost(input) then
+			line.insert_at_back({ name = input.name, count = 1 })
 		end
 	end
 end
 
----@type {[InputKind]: fun(target: LuaEntity, name: string)}
+---@type {[InputKind]: fun(input: ActiveInput)}
 local feeders = {
 	item = insertOnBothLanes,
-	fluid = function(target, name)
-		target.insert_fluid({ name = name, amount = config.fluidPerFeed })
+	fluid = function(input)
+		input.target.insert_fluid({ name = input.name, amount = config.fluidPerFeed })
 	end,
 }
 
@@ -168,7 +204,7 @@ feedInputs = function()
 		if not input.combinator.valid then
 			inputs.active[unitNumber] = nil
 		elseif isUnchanged(input) then
-			feeders[input.kind](input.target, input.name)
+			feeders[input.kind](input)
 		else
 			table.insert(changed, input.combinator)
 		end
