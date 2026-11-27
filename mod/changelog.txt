@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.4.0
+Date: 2026-11-27
+  Major Features:
+    - The main factory is now a floor on the map instead of a factory building, so factories built on it need no recursion research. Factories inside those follow Factorissimo's recursion rules as usual.
+  Changes:
+    - The floor powers everything on it through one power pole, like inside a factory.
+    - The floor follows Factorissimo's lights and greenhouse upgrades.
+---------------------------------------------------------------------------------------------------
 Version: 0.3.3
 Date: 2026-11-27
   Graphics:
