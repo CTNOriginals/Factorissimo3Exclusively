@@ -4,9 +4,26 @@ include ./.make/main.mk
 SCENARIO_NAME?=$(PROJECT_NAME)
 SCENARIO_SRC:=src
 
-FACTORIO_ARGS:=--load-scenario "$(PROJECT_NAME)/$(SCENARIO_NAME)"
-PROJECT_DEST:=$(FACTORIO_MOD_DIR)/$(PROJECT_NAME)
+# Only the paths set in .env are passed to factorio, so it (or a launcher) uses its own defaults for the rest.
+# This is evaluated before the defaults below are filled in.
+FACTORIO_ARGS:=$(strip \
+	$(if $(FACTORIO_CONFIG),--config "$(FACTORIO_CONFIG)") \
+	$(if $(FACTORIO_MOD_DIR),--mod-directory "$(FACTORIO_MOD_DIR)") \
+	--load-scenario "$(PROJECT_NAME)/$(SCENARIO_NAME)")
+
+# Paths that are not set in .env resolve from FACTORIO_DIR, like a standalone factorio install
+FACTORIO_EXE?=$(FACTORIO_DIR)/bin/x64/factorio.exe
+FACTORIO_MOD_DIR?=$(FACTORIO_DIR)/mods
 FACTORIO_LOG?=$(FACTORIO_DIR)/factorio-current.log
+
+PROJECT_DEST:=$(FACTORIO_MOD_DIR)/$(PROJECT_NAME)
+
+# Fails the targets that need a factorio install when FACTORIO_DIR is not set
+.PHONY: require-factorio-dir
+require-factorio-dir:
+	@test -n "$(FACTORIO_DIR)" || { echo "FACTORIO_DIR is not set, copy .env.example to .env and fill it in"; exit 1; }
+
+run deploy log edit pull: require-factorio-dir
 
 MOD_FILES:=mod/** LICENSE.md README.md
 
@@ -21,7 +38,7 @@ define copy-mod
 endef
 
 run: ##@run Run factorio and start a new game from the deployed scenario
-	$(FACTORIO_EXE) $(FACTORIO_ARGS)
+	"$(FACTORIO_EXE)" $(FACTORIO_ARGS)
 
 deploy: ##@run Deploy the mod to the factorio mods folder
 	@echo Deploying $(PROJECT_NAME) \($(VERSION)\) to $(PROJECT_DEST)
