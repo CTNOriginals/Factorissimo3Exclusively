@@ -282,8 +282,11 @@ local events = {
 	[defines.events.on_redo_applied] = scanAll,
 }
 
+-- Only registered when the mod defines them, so the scenario still loads without it
 for _, name in ipairs(const.gui.closeInputs) do
-	events[name] = onCloseInput
+	if prototypes.custom_input[name] then
+		events[name] = onCloseInput
+	end
 end
 
 return {
