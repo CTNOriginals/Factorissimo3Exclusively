@@ -3,6 +3,8 @@
 A scenario where the whole game is played inside a single
 [Factorissimo 3](https://mods.factorio.com/mod/factorissimo-2-notnotmelon) factory building.
 
+Inspired by [this video](https://www.youtube.com/watch?v=maxsZF-rsb4).
+
 <!-- TODO: screenshot of the factory floor with the input combinators -->
 
 ## Features
@@ -65,8 +67,14 @@ copy, and only the map files are brought back into `src`:
 2. Open and save it in the map editor
 3. `make pull` copies the saved map back into `src`
 
-Inside the editor, `/setup-inputs` places an input combinator behind every
-wall gap of the factory you are standing in.
+Inside the editor, these commands set up the factory you are standing in:
+
+- `/setup-inputs` places an input combinator behind every wall gap
+- `/center-power-pole` moves the factory power pole to the middle of the entrance
+
+## AI disclosure
+
+This project was developed with the assistance of AI.
 
 ## License
 
