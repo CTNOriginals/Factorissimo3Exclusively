@@ -69,14 +69,17 @@ M.gui.closeInputs = {
 
 M.commands = {}
 M.commands.setupInputs = "setup-inputs"
-M.commands.centerPowerPole = "center-power-pole"
+M.commands.setupFloor = "setup-floor"
+
+-- Floor
+
+---The pole that powers the whole floor, defined in mod/data.lua
+M.floorPole = M.name .. "-floor-pole"
 
 -- Factorissimo
 
----The power pole Factorissimo places inside every factory
-M.factoryPowerPole = "factory-power-pole"
-
----The floor tile of the factory entrance
-M.entranceTile = "factory-entrance"
+M.factorissimo = {}
+M.factorissimo.lightsTechnology = "factory-interior-upgrade-lights"
+M.factorissimo.greenhouseTechnology = "factory-upgrade-greenhouse"
 
 return M

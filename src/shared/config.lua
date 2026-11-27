@@ -61,16 +61,26 @@ M.researchGoals = {
 ---Keep it different from feedInterval and retryInterval, which are registered separately and would replace it.
 M.researchCheckInterval = 60
 
--- Spawn
+-- Floor
 
----Where players spawn and respawn, inside the factory.
----The spawn set on this surface in the map editor is used instead, as long as it is inside a factory.
-M.spawn = {
-	surface = "nauvis-factory-floor",
-	position = { x = 0, y = 0 },
+---The main factory floor, which /setup-floor builds on the surface instead of inside a factory,
+---so the factories built on it count as built in the open world.
+M.floor = {
+	surface = "nauvis",
+	---Force whose research decides the lights and greenhouse upgrades of the floor
+	force = "player",
+	---Factorissimo layout the floor copies
+	layout = "factory-3",
+	---Where the pole that powers the whole floor goes, the middle of the bottom wall
+	polePosition = { x = 0, y = 29 },
 }
 
----A character found on one of these surfaces is moved back to the spawn
-M.outsideSurfaces = { "nauvis" }
+-- Spawn
+
+---Where players spawn and respawn on the floor.
+---The spawn set in the map editor is used instead, as long as it is on the floor.
+M.spawn = {
+	position = { x = 0, y = 0 },
+}
 
 return M

@@ -1,38 +1,32 @@
 -- Commands for building the scenario map, which only work in the map editor.
--- Running them again is harmless, so they can be part of setting up a new map.
 
 local const = require("shared.constants")
 local config = require("shared.config")
 local utils = require("shared.utils")
+local floor = require("runtime.floor")
 
----Moves the power pole that Factorissimo places beside the entrance to the middle of it,
----so it is out of the way. Factorissimo keeps track of the pole itself, so it keeps working after the move.
+---Builds the main factory floor with its power pole and input combinators.
+---Everything in the area is removed first, so it is meant for a new map.
 ---@param command CustomCommandData
-local function onCenterPowerPoleCommand(command)
+local function onSetupFloorCommand(command)
 	local player = game.get_player(command.player_index)
 	if not player or not utils.RequireEditor(player, command.name) then
 		return
 	end
 
-	local surface = player.surface
-	local area = utils.AreaAround(player.position, config.setupRadius)
-	local pole = surface.find_entities_filtered({ area = area, name = const.factoryPowerPole, limit = 1 })[1]
-	local entrance = surface.find_tiles_filtered({ area = area, name = const.entranceTile })
-
-	if not pole or #entrance == 0 then
-		player.print({ "message.power-pole-not-found" })
+	local surface = game.get_surface(config.floor.surface)
+	if not surface then
+		player.print({ "message.floor-surface-missing", config.floor.surface })
 		return
 	end
 
-	-- The entrance is in the bottom wall, so only its horizontal middle is needed
-	local left, right = math.huge, -math.huge
-	for _, tile in pairs(entrance) do
-		left = math.min(left, tile.position.x)
-		right = math.max(right, tile.position.x + 1)
+	local placed = floor.build(surface, player.force --[[@as LuaForce]])
+	if not placed then
+		player.print({ "message.floor-layout-missing", config.floor.layout })
+		return
 	end
 
-	pole.teleport({ (left + right) / 2, pole.position.y })
-	player.print({ "message.power-pole-centered" })
+	player.print({ "message.floor-built", surface.name, placed })
 end
 
-commands.add_command(const.commands.centerPowerPole, { "command-help.center-power-pole" }, onCenterPowerPoleCommand)
+commands.add_command(const.commands.setupFloor, { "command-help.setup-floor" }, onSetupFloorCommand)
