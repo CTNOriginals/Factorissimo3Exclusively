@@ -32,6 +32,19 @@ M.fluidPerFeed = 1000
 ---Tiles around the player that /setup-inputs searches for wall gaps
 M.setupRadius = 64
 
+-- Research
+
+---Technologies that are researched by mining a resource, which is impossible here, get one of these goals instead.
+---A goal is reached when the force has the amount stored: fluids in storage tanks.
+---@type ResearchGoal[]
+M.researchGoals = {
+	{ technology = "oil-processing", kind = "fluid", name = "crude-oil", amount = 25000 },
+}
+
+---Ticks between checks of the research goals.
+---Keep it different from feedInterval and retryInterval, which are registered separately and would replace it.
+M.researchCheckInterval = 60
+
 -- Spawn
 
 ---Where players spawn and respawn, inside the factory
