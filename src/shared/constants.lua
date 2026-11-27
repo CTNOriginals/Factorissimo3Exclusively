@@ -40,6 +40,17 @@ M.factoryFloorSuffix = "-factory-floor"
 ---The default map width and height, which is no limit in practice
 M.unlimitedMapSize = 2000000
 
+-- Sprites
+
+---Pipe that connects towards the combinator, per direction of the combinator, defined in mod/data.lua
+---@type {[defines.direction]: string}
+M.pipeConnectionSprites = {
+	[defines.direction.north] = M.name .. "-pipe-t-up",
+	[defines.direction.east] = M.name .. "-pipe-t-right",
+	[defines.direction.south] = M.name .. "-pipe-t-down",
+	[defines.direction.west] = M.name .. "-pipe-t-left",
+}
+
 -- GUI
 
 M.gui = {}

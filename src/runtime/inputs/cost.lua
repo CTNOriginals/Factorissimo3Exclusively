@@ -41,6 +41,25 @@ local function getDirection(offset)
 	return nil
 end
 
+---Draws the pipe behind the combinator as connected to it, to show the fluid goes into it.
+---Skipped when the sprite is missing, since it comes from the mod around the scenario.
+---The drawing is removed along with the pipe.
+---@param combinator LuaEntity
+---@param pipe LuaEntity
+local function drawConnection(combinator, pipe)
+	local sprite = const.pipeConnectionSprites[combinator.direction]
+	if not sprite or not helpers.is_valid_sprite_path(sprite) then
+		return
+	end
+
+	rendering.draw_sprite({
+		sprite = sprite,
+		target = pipe,
+		surface = pipe.surface,
+		render_layer = "higher-object-under",
+	})
+end
+
 ---Returns the fluid cost of the resource, if it has one
 ---@param kind InputKind
 ---@param name string
@@ -106,6 +125,8 @@ M.build = function(combinator)
 		M.remove({ entities = entities, source = entities[1] })
 		return nil
 	end
+
+	drawConnection(combinator, entities[1])
 
 	return { entities = entities, source = entities[1] }
 end
