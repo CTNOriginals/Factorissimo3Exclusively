@@ -153,7 +153,8 @@ M.pay = function(cost, pipes)
 		return false
 	end
 
-	pipes.source.remove_fluid({ name = cost.fluid, amount = cost.amount })
+	-- A pipe has a single fluid storage, and the count above made sure it holds the cost fluid
+	pipes.source.remove_fluid(1, cost.amount)
 	return true
 end
 
