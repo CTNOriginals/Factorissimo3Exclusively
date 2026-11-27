@@ -173,7 +173,8 @@ end
 local feeders = {
 	item = insertOnBothLanes,
 	fluid = function(input)
-		input.target.insert_fluid({ name = input.name, amount = config.fluidPerFeed })
+		local rate = config.fluidRates[input.name] or config.defaultFluidRate
+		input.target.insert_fluid({ name = input.name, amount = rate * config.feedInterval / 60 })
 	end,
 }
 

@@ -33,8 +33,16 @@ M.feedInterval = 1
 ---Ticks between target checks of the inputs that have a signal but nothing to feed
 M.retryInterval = 300
 
----Fluid inserted per feed, capped by what the pipe can hold
-M.fluidPerFeed = 1000
+---Fluid per second that a single input feeds, so throughput takes more inputs like it does for items.
+---Water matches an offshore pump, crude oil a decent oil field of around 8 pumpjacks.
+---@type {[string]: number}
+M.fluidRates = {
+	["water"] = 1200,
+	["crude-oil"] = 150,
+}
+
+---Fluid per second for allowed fluids that are missing from fluidRates
+M.defaultFluidRate = 100
 
 ---Tiles around the player that /setup-inputs searches for wall gaps
 M.setupRadius = 64
