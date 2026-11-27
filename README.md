@@ -1,7 +1,6 @@
 # Factorissimo 3 Exclusively
 
-A scenario where the whole game is played inside a single
-[Factorissimo 3](https://mods.factorio.com/mod/factorissimo-2-notnotmelon) factory building.
+A scenario where the whole game is played inside a single [Factorissimo 3](https://mods.factorio.com/mod/factorissimo-2-notnotmelon) factory building.
 
 Inspired by [this video](https://www.youtube.com/watch?v=maxsZF-rsb4).
 
@@ -25,13 +24,11 @@ Inspired by [this video](https://www.youtube.com/watch?v=maxsZF-rsb4).
 
 Switch the combinator off or clear it to stop the input.
 
-For uranium ore, also deliver sulfuric acid: pipes are built around the combinator, with a pipe to ground on each side
-facing the factory. Connect to either one with a pipe to ground inside the wall. Every ore that comes in uses 1 acid.
+For uranium ore, also deliver sulfuric acid: pipes are built around the combinator, with a pipe to ground on each side facing the factory. Connect to either one with a pipe to ground inside the wall. Every ore that comes in uses 1 acid.
 
 ### Research
 
-Mining crude oil and uranium ore is impossible in here, so the technologies that need it ask for the resource to be
-stored instead. The goal and its progress are shown in the top left while the technology is available:
+Mining crude oil and uranium ore is impossible in here, so the technologies that need it ask for the resource to be stored instead. The goal and its progress are shown in the top left while the technology is available:
 
 | Technology         | Goal                                    |
 | ------------------ | --------------------------------------- |
@@ -42,9 +39,7 @@ The research screen still shows the vanilla requirement, since that text can onl
 
 ## Configuration
 
-The allowed resources, feed rates, fluid costs, research goals and spawn point are in
-[`shared/config.lua`](src/shared/config.lua).
-A game keeps the scripts it was started with, so changes only apply to new games.
+The allowed resources, feed rates, fluid costs, research goals and spawn point are in [`shared/config.lua`](src/shared/config.lua). A game keeps the scripts it was started with, so changes only apply to new games.
 
 ## Development
 
@@ -59,9 +54,7 @@ Requires `make`, `git`, `awk`, and `zip` for `make package`.
 
 ### Editing the map
 
-The map editor only opens scenarios from the user scenarios folder, and saving
-writes its loaded copy of the scripts back there. So the map is edited in a
-copy, and only the map files are brought back into `src`:
+The map editor only opens scenarios from the user scenarios folder, and saving writes its loaded copy of the scripts back there. So the map is edited in a copy, and only the map files are brought back into `src`:
 
 1. `make edit` copies the scenario to the user scenarios folder
 2. Open and save it in the map editor
@@ -74,16 +67,9 @@ Inside the editor, these commands set up the factory you are standing in:
 
 ## AI disclosure
 
-This project was built together with an AI assistant, as one long, continuous back and forth rather than a
-single generated result. The idea, the design of each feature and the project structure are my own: I decided
-what to build and how it should play, and the AI wrote most of the code to those directions. Every change was
-reviewed and tested in game by me, and many were sent back with fixes or a different approach. The map itself,
-the balancing and the decisions on what to keep were done by hand.
+This project was built together with an AI assistant, as one long, continuous back and forth rather than a single generated result. The idea, the design of each feature and the project structure are my own: I decided what to build and how it should play, and the AI wrote most of the code to those directions. Every change was reviewed and tested in game by me, and many were sent back with fixes or a different approach. The map itself, the balancing and the decisions on what to keep were done by hand.
 
-The AI also did not work from scratch. The project structure, the make tooling (including the log filter) and
-the code style all come from my own [Color Coded Combinators](https://github.com/CTNOriginals/ColorCodedCombinators)
-mod, and the code here was written to follow it. That way this project builds on my own earlier work rather than
-on code taken from others.
+The AI also did not work from scratch. The project structure, the make tooling (including the log filter) and the code style all come from my own [Color Coded Combinators](https://github.com/CTNOriginals/ColorCodedCombinators) mod, and the code here was written to follow it. That way this project builds on my own earlier work rather than on code taken from others.
 
 ## License
 
